@@ -1,0 +1,5640 @@
+{
+  "collection": {
+    "_": {
+      "postman_id": "10de6bc9-4743-4d5e-a306-61b7b8008a54",
+      "exporter_id": "55097629",
+      "collection_link": "https://go.postman.co/collection/55097629-10de6bc9-4743-4d5e-a306-61b7b8008a54?source=collection_link"
+    },
+    "item": [
+      {
+        "id": "72206841-45fb-4a44-b524-07d9f48a2383",
+        "name": "Positive Scenarios",
+        "item": [
+          {
+            "id": "c23ae552-b5d8-4df7-b838-69d2bd45407d",
+            "name": "Create Task",
+            "request": {
+              "url": {
+                "path": [
+                  "list",
+                  "{{list_id}}",
+                  "task"
+                ],
+                "host": [
+                  "{{base_url}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "{{token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{\r\n  \"name\": \"{{task_name}}\",\r\n  \"description\": \"Task created from Postman course project\",\r\n  \"status\": \"to do\",\r\n  \"priority\": 3\r\n}",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "prerequest",
+                "script": {
+                  "id": "295ab6e1-b2ff-4a53-91b7-43d4926e70e6",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    "let taskName = \"Course Task \" + Date.now();\r",
+                    "\r",
+                    "pm.environment.set(\"task_name\", taskName);"
+                  ],
+                  "_lastExecutionId": "93113e45-26ce-4c7d-9ff1-deb20d23e450"
+                }
+              },
+              {
+                "listen": "test",
+                "script": {
+                  "id": "e66746f6-8c2b-4835-9eef-421042c6c569",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    "pm.test(\"Status code is 200\", function () {\r",
+                    "    pm.response.to.have.status(200);\r",
+                    "});\r",
+                    "\r",
+                    "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                    "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                    "});\r",
+                    "\r",
+                    "let response = pm.response.json();\r",
+                    "\r",
+                    "pm.test(\"Task was created\", function () {\r",
+                    "    pm.expect(response.id).to.exist;\r",
+                    "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                    "});\r",
+                    "\r",
+                    "pm.test(\"Task has required fields\", function () {\r",
+                    "    pm.expect(response).to.have.property(\"id\");\r",
+                    "    pm.expect(response).to.have.property(\"name\");\r",
+                    "    pm.expect(response).to.have.property(\"status\");\r",
+                    "});\r",
+                    "\r",
+                    "pm.environment.set(\"task_id\", response.id);"
+                  ],
+                  "_lastExecutionId": "651d01dc-e9b4-44e1-a151-eeb31497aa75"
+                }
+              }
+            ]
+          },
+          {
+            "id": "36261d69-9752-47fe-8165-67c5722e523d",
+            "name": "Get Task",
+            "request": {
+              "url": {
+                "path": [
+                  "task",
+                  "{{task_id}}"
+                ],
+                "host": [
+                  "{{base_url}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "{{token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "method": "GET"
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "8f27770c-cf96-4197-a541-041d3e83583c",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    "pm.test(\"Status code is 200\", function () {\r",
+                    "    pm.response.to.have.status(200);\r",
+                    "});\r",
+                    "\r",
+                    "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                    "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                    "});\r",
+                    "\r",
+                    "let response = pm.response.json();\r",
+                    "\r",
+                    "pm.test(\"Correct task returned\", function () {\r",
+                    "    pm.expect(response.id).to.eql(pm.environment.get(\"task_id\"));\r",
+                    "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                    "});\r",
+                    "\r",
+                    "pm.test(\"Task has required fields\", function () {\r",
+                    "    pm.expect(response).to.have.property(\"id\");\r",
+                    "    pm.expect(response).to.have.property(\"name\");\r",
+                    "    pm.expect(response).to.have.property(\"status\");\r",
+                    "});"
+                  ],
+                  "_lastExecutionId": "07268cc7-3a9e-4c26-aba8-80a7593db597"
+                }
+              }
+            ]
+          },
+          {
+            "id": "1534dc49-495b-4dde-943b-c10906b7515f",
+            "name": "Update Task",
+            "request": {
+              "url": {
+                "path": [
+                  "task",
+                  "{{task_id}}"
+                ],
+                "host": [
+                  "{{base_url}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "{{token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "method": "PUT",
+              "body": {
+                "mode": "raw",
+                "raw": "{\r\n  \"name\": \"{{updated_task_name}}\",\r\n  \"description\": \"Task updated from Postman course project\"\r\n}",
+                "options": {
+                  "raw": {
+                    "language": "json"
+                  }
+                }
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "prerequest",
+                "script": {
+                  "id": "c80e5cdd-e837-4b79-937d-c77255e4b2f5",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    "let updatedName = \"Updated Course Task \" + Date.now();\r",
+                    "\r",
+                    "pm.environment.set(\"updated_task_name\", updatedName);"
+                  ],
+                  "_lastExecutionId": "de157499-4655-42f0-9f42-6f4b231a49d8"
+                }
+              },
+              {
+                "listen": "test",
+                "script": {
+                  "id": "86052a6f-f354-4608-a835-64238c420620",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    "pm.test(\"Status code is 200\", function () {\r",
+                    "    pm.response.to.have.status(200);\r",
+                    "});\r",
+                    "\r",
+                    "let response = pm.response.json();\r",
+                    "\r",
+                    "pm.test(\"Task was updated\", function () {\r",
+                    "    pm.expect(response.id).to.eql(pm.environment.get(\"task_id\"));\r",
+                    "    pm.expect(response.name).to.eql(pm.environment.get(\"updated_task_name\"));\r",
+                    "});"
+                  ],
+                  "_lastExecutionId": "ff1dacd7-008e-4dcb-b6db-7eaa1431c97b"
+                }
+              }
+            ]
+          },
+          {
+            "id": "5f47ee0b-f494-4589-a05a-84ad9c74597f",
+            "name": "Delete Task",
+            "request": {
+              "url": {
+                "path": [
+                  "task",
+                  "{{task_id}}"
+                ],
+                "host": [
+                  "{{base_url}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "{{token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "method": "DELETE"
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "54da7f80-8a9e-41d9-9640-2913fe105517",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    "pm.test(\"Status code is 204 or 200\", function () {\r",
+                    "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);\r",
+                    "});"
+                  ],
+                  "_lastExecutionId": "03efb96b-5a12-4a97-8303-902d8d6fe502"
+                }
+              }
+            ]
+          }
+        ],
+        "event": []
+      },
+      {
+        "id": "d31fa38f-ecea-4ac5-ba43-1b9980d3b5a2",
+        "name": "Negative Scenarios",
+        "item": [
+          {
+            "id": "0d92bca1-c304-43c1-b967-e75f921045ab",
+            "name": "Get Task with invalid ID",
+            "request": {
+              "url": {
+                "path": [
+                  "task",
+                  "{{invalid_task_id}}"
+                ],
+                "host": [
+                  "{{base_url}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "{{token}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "method": "GET"
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "311da77b-ef75-4e20-9547-33c525c7548e",
+                  "type": "text/javascript",
+                  "packages": {},
+                  "exec": [
+                    "pm.test(\"Status code is 401\", function () {\r",
+                    "    pm.response.to.have.status(401);\r",
+                    "});"
+                  ],
+                  "_lastExecutionId": "4dc38a74-60d7-4666-8baf-4caf6f810baf"
+                }
+              }
+            ]
+          }
+        ],
+        "event": []
+      }
+    ],
+    "event": [],
+    "variable": [],
+    "info": {
+      "_postman_id": "10de6bc9-4743-4d5e-a306-61b7b8008a54",
+      "name": "ClickUp Tasks API Course Project",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    }
+  },
+  "environment": {
+    "_": {
+      "postman_variable_scope": "environment",
+      "postman_exported_at": "2026-06-30T01:12:34.742Z",
+      "postman_exported_using": "Postman/12.17.0-260629-0232"
+    },
+    "id": "f546003d-06ee-43e4-ac21-7dd7265b2d0c",
+    "name": "ClickUp Tasks Env",
+    "values": [
+      {
+        "type": "any",
+        "value": "https://api.clickup.com/api/v2",
+        "key": "base_url"
+      },
+      {
+        "type": "any",
+        "value": "YOUR_CLICKUP_TOKEN",
+        "key": "token"
+      },
+      {
+        "type": "any",
+        "value": "901219175349",
+        "key": "list_id"
+      },
+      {
+        "type": "any",
+        "value": null,
+        "key": "task_id"
+      },
+      {
+        "type": "any",
+        "value": "Course Task 1782785966635",
+        "key": "task_name"
+      },
+      {
+        "type": "any",
+        "value": "Updated Course Task 1782785967107",
+        "key": "updated_task_name"
+      },
+      {
+        "type": "any",
+        "value": "invalid_task_id_12345",
+        "key": "invalid_task_id"
+      }
+    ]
+  },
+  "globals": {
+    "id": "0d76dacf-b6c4-49ad-b6d3-6a7d5f1cddfe",
+    "values": []
+  },
+  "run": {
+    "stats": {
+      "iterations": {
+        "total": 1,
+        "pending": 0,
+        "failed": 0
+      },
+      "items": {
+        "total": 5,
+        "pending": 0,
+        "failed": 0
+      },
+      "scripts": {
+        "total": 7,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequests": {
+        "total": 5,
+        "pending": 0,
+        "failed": 0
+      },
+      "requests": {
+        "total": 5,
+        "pending": 0,
+        "failed": 0
+      },
+      "tests": {
+        "total": 5,
+        "pending": 0,
+        "failed": 0
+      },
+      "assertions": {
+        "total": 12,
+        "pending": 0,
+        "failed": 9
+      },
+      "testScripts": {
+        "total": 5,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequestScripts": {
+        "total": 2,
+        "pending": 0,
+        "failed": 0
+      }
+    },
+    "timings": {
+      "responseAverage": 89.8,
+      "responseMin": 62,
+      "responseMax": 158,
+      "responseSd": 35.61123418248798,
+      "dnsAverage": 0,
+      "dnsMin": 0,
+      "dnsMax": 0,
+      "dnsSd": 0,
+      "firstByteAverage": 0,
+      "firstByteMin": 0,
+      "firstByteMax": 0,
+      "firstByteSd": 0,
+      "started": 1782785966620,
+      "completed": 1782785967538
+    },
+    "executions": [
+      {
+        "cursor": {
+          "position": 0,
+          "iteration": 0,
+          "length": 5,
+          "cycles": 1,
+          "empty": false,
+          "eof": false,
+          "bof": true,
+          "cr": false,
+          "ref": "134928a1-9e43-4bca-a647-cf47cf340fe5",
+          "httpRequestId": "00e0e48b-0620-4c7f-98e5-6c71557fd7de"
+        },
+        "item": {
+          "id": "c23ae552-b5d8-4df7-b838-69d2bd45407d",
+          "name": "Create Task",
+          "request": {
+            "url": {
+              "path": [
+                "list",
+                "{{list_id}}",
+                "task"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"{{task_name}}\",\r\n  \"description\": \"Task created from Postman course project\",\r\n  \"status\": \"to do\",\r\n  \"priority\": 3\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "295ab6e1-b2ff-4a53-91b7-43d4926e70e6",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "let taskName = \"Course Task \" + Date.now();\r",
+                  "\r",
+                  "pm.environment.set(\"task_name\", taskName);"
+                ],
+                "_lastExecutionId": "93113e45-26ce-4c7d-9ff1-deb20d23e450"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "e66746f6-8c2b-4835-9eef-421042c6c569",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});\r",
+                  "\r",
+                  "let response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Task was created\", function () {\r",
+                  "    pm.expect(response.id).to.exist;\r",
+                  "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Task has required fields\", function () {\r",
+                  "    pm.expect(response).to.have.property(\"id\");\r",
+                  "    pm.expect(response).to.have.property(\"name\");\r",
+                  "    pm.expect(response).to.have.property(\"status\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.environment.set(\"task_id\", response.id);"
+                ],
+                "_lastExecutionId": "651d01dc-e9b4-44e1-a151-eeb31497aa75"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "api",
+              "v2",
+              "list",
+              "901219175349",
+              "task"
+            ],
+            "host": [
+              "api",
+              "clickup",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "YOUR_CLICKUP_TOKEN"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "8da8bd00-b887-4acc-8041-1b8b96ebb36e",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "api.clickup.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "145",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n  \"name\": \"Course Task 1782785966635\",\r\n  \"description\": \"Task created from Postman course project\",\r\n  \"status\": \"to do\",\r\n  \"priority\": 3\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "94740610-40ab-4aac-8ccf-ae436206ecae",
+          "status": "Unauthorized",
+          "code": 401,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "51"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Date",
+              "value": "Tue, 30 Jun 2026 02:19:25 GMT"
+            },
+            {
+              "key": "X-Xss-Protection",
+              "value": "0"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Content-Language",
+              "value": "en-US"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "frame-ancestors 'self';"
+            },
+            {
+              "key": "Expect-Ct",
+              "value": "max-age=0"
+            },
+            {
+              "key": "Expires",
+              "value": "0"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "Server",
+              "value": "nginx"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=31536000; includeSubDomains"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Datadog-Trace-Id",
+              "value": "1978797931102358495"
+            },
+            {
+              "key": "X-Dns-Prefetch-Control",
+              "value": "off"
+            },
+            {
+              "key": "X-Download-Options",
+              "value": "noopen"
+            },
+            {
+              "key": "X-Krakend",
+              "value": "Version undefined"
+            },
+            {
+              "key": "X-Krakend-Completed",
+              "value": "false"
+            },
+            {
+              "key": "X-Permitted-Cross-Domain-Policies",
+              "value": "none"
+            },
+            {
+              "key": "X-Cache",
+              "value": "Error from cloudfront"
+            },
+            {
+              "key": "Via",
+              "value": "1.1 0417fc4cd131525d7bfe1f1d34277a38.cloudfront.net (CloudFront)"
+            },
+            {
+              "key": "X-Amz-Cf-Pop",
+              "value": "WAW51-P6"
+            },
+            {
+              "key": "Alt-Svc",
+              "value": "h3=\":443\"; ma=86400"
+            },
+            {
+              "key": "X-Amz-Cf-Id",
+              "value": "4gfPdzZAZqDAXpilGwuUaF6lT3o3xMfVsJaw1R7thVXGZxJi96V9Uw=="
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              101,
+              114,
+              114,
+              34,
+              58,
+              34,
+              79,
+              97,
+              117,
+              116,
+              104,
+              32,
+              116,
+              111,
+              107,
+              101,
+              110,
+              32,
+              110,
+              111,
+              116,
+              32,
+              102,
+              111,
+              117,
+              110,
+              100,
+              34,
+              44,
+              34,
+              69,
+              67,
+              79,
+              68,
+              69,
+              34,
+              58,
+              34,
+              79,
+              65,
+              85,
+              84,
+              72,
+              95,
+              48,
+              49,
+              57,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 158,
+          "responseSize": 51
+        },
+        "id": "c23ae552-b5d8-4df7-b838-69d2bd45407d",
+        "assertions": [
+          {
+            "assertion": "Status code is 200",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 0,
+              "test": "Status code is 200",
+              "message": "expected response to have status code 200 but got 401",
+              "stack": "AssertionError: expected response to have status code 200 but got 401\n   at Object.eval sandbox-script.js:1:1)"
+            }
+          },
+          {
+            "assertion": "Response time is less than 2000ms",
+            "skipped": false
+          },
+          {
+            "assertion": "Task was created",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 2,
+              "test": "Task was created",
+              "message": "expected undefined to exist",
+              "stack": "AssertionError: expected undefined to exist\n   at Object.eval sandbox-script.js:3:1)"
+            }
+          },
+          {
+            "assertion": "Task has required fields",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 3,
+              "test": "Task has required fields",
+              "message": "expected { err: 'Oauth token not found', …(1) } to have property 'id'",
+              "stack": "AssertionError: expected { err: 'Oauth token not found', …(1) } to have property 'id'\n   at Object.eval sandbox-script.js:4:1)"
+            }
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "c832f151-7d07-44fd-be96-b2f5312a34a8",
+          "length": 5,
+          "cycles": 1,
+          "position": 1,
+          "iteration": 0,
+          "httpRequestId": "eea08d25-6b42-47b5-88b3-bb7641267c0b"
+        },
+        "item": {
+          "id": "36261d69-9752-47fe-8165-67c5722e523d",
+          "name": "Get Task",
+          "request": {
+            "url": {
+              "path": [
+                "task",
+                "{{task_id}}"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "8f27770c-cf96-4197-a541-041d3e83583c",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});\r",
+                  "\r",
+                  "let response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Correct task returned\", function () {\r",
+                  "    pm.expect(response.id).to.eql(pm.environment.get(\"task_id\"));\r",
+                  "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Task has required fields\", function () {\r",
+                  "    pm.expect(response).to.have.property(\"id\");\r",
+                  "    pm.expect(response).to.have.property(\"name\");\r",
+                  "    pm.expect(response).to.have.property(\"status\");\r",
+                  "});"
+                ],
+                "_lastExecutionId": "07268cc7-3a9e-4c26-aba8-80a7593db597"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "api",
+              "v2",
+              "task",
+              "null"
+            ],
+            "host": [
+              "api",
+              "clickup",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "YOUR_CLICKUP_TOKEN"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "f74629cf-30f4-43e0-824b-a5ad5cd0958b",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "api.clickup.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "046e58a4-8156-4d98-91c8-f5474cb91a2e",
+          "status": "Unauthorized",
+          "code": 401,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "51"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Date",
+              "value": "Tue, 30 Jun 2026 02:19:25 GMT"
+            },
+            {
+              "key": "X-Xss-Protection",
+              "value": "0"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Content-Language",
+              "value": "en-US"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "frame-ancestors 'self';"
+            },
+            {
+              "key": "Expect-Ct",
+              "value": "max-age=0"
+            },
+            {
+              "key": "Expires",
+              "value": "0"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "Server",
+              "value": "nginx"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=31536000; includeSubDomains"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Datadog-Trace-Id",
+              "value": "6105488028201809822"
+            },
+            {
+              "key": "X-Dns-Prefetch-Control",
+              "value": "off"
+            },
+            {
+              "key": "X-Download-Options",
+              "value": "noopen"
+            },
+            {
+              "key": "X-Krakend",
+              "value": "Version undefined"
+            },
+            {
+              "key": "X-Krakend-Completed",
+              "value": "false"
+            },
+            {
+              "key": "X-Permitted-Cross-Domain-Policies",
+              "value": "none"
+            },
+            {
+              "key": "X-Cache",
+              "value": "Error from cloudfront"
+            },
+            {
+              "key": "Via",
+              "value": "1.1 0417fc4cd131525d7bfe1f1d34277a38.cloudfront.net (CloudFront)"
+            },
+            {
+              "key": "X-Amz-Cf-Pop",
+              "value": "WAW51-P6"
+            },
+            {
+              "key": "Alt-Svc",
+              "value": "h3=\":443\"; ma=86400"
+            },
+            {
+              "key": "X-Amz-Cf-Id",
+              "value": "8S_ExWCg54YSO129h4ffsToSkrNCHYWZ4S2eNfekhVQxINWxpcJh3g=="
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              101,
+              114,
+              114,
+              34,
+              58,
+              34,
+              79,
+              97,
+              117,
+              116,
+              104,
+              32,
+              116,
+              111,
+              107,
+              101,
+              110,
+              32,
+              110,
+              111,
+              116,
+              32,
+              102,
+              111,
+              117,
+              110,
+              100,
+              34,
+              44,
+              34,
+              69,
+              67,
+              79,
+              68,
+              69,
+              34,
+              58,
+              34,
+              79,
+              65,
+              85,
+              84,
+              72,
+              95,
+              48,
+              49,
+              57,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 92,
+          "responseSize": 51
+        },
+        "id": "36261d69-9752-47fe-8165-67c5722e523d",
+        "assertions": [
+          {
+            "assertion": "Status code is 200",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 0,
+              "test": "Status code is 200",
+              "message": "expected response to have status code 200 but got 401",
+              "stack": "AssertionError: expected response to have status code 200 but got 401\n   at Object.eval sandbox-script.js:1:2)"
+            }
+          },
+          {
+            "assertion": "Response time is less than 2000ms",
+            "skipped": false
+          },
+          {
+            "assertion": "Correct task returned",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 2,
+              "test": "Correct task returned",
+              "message": "expected undefined to deeply equal null",
+              "stack": "AssertionError: expected undefined to deeply equal null\n   at Object.eval sandbox-script.js:3:2)"
+            }
+          },
+          {
+            "assertion": "Task has required fields",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 3,
+              "test": "Task has required fields",
+              "message": "expected { err: 'Oauth token not found', …(1) } to have property 'id'",
+              "stack": "AssertionError: expected { err: 'Oauth token not found', …(1) } to have property 'id'\n   at Object.eval sandbox-script.js:4:2)"
+            }
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "455d2fda-5650-4326-9b4d-83a8ee5ce8c8",
+          "length": 5,
+          "cycles": 1,
+          "position": 2,
+          "iteration": 0,
+          "httpRequestId": "dc096d12-7e65-4442-907f-f243bbbc2229"
+        },
+        "item": {
+          "id": "1534dc49-495b-4dde-943b-c10906b7515f",
+          "name": "Update Task",
+          "request": {
+            "url": {
+              "path": [
+                "task",
+                "{{task_id}}"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"{{updated_task_name}}\",\r\n  \"description\": \"Task updated from Postman course project\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "c80e5cdd-e837-4b79-937d-c77255e4b2f5",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "let updatedName = \"Updated Course Task \" + Date.now();\r",
+                  "\r",
+                  "pm.environment.set(\"updated_task_name\", updatedName);"
+                ],
+                "_lastExecutionId": "de157499-4655-42f0-9f42-6f4b231a49d8"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "86052a6f-f354-4608-a835-64238c420620",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "let response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Task was updated\", function () {\r",
+                  "    pm.expect(response.id).to.eql(pm.environment.get(\"task_id\"));\r",
+                  "    pm.expect(response.name).to.eql(pm.environment.get(\"updated_task_name\"));\r",
+                  "});"
+                ],
+                "_lastExecutionId": "ff1dacd7-008e-4dcb-b6db-7eaa1431c97b"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "api",
+              "v2",
+              "task",
+              "null"
+            ],
+            "host": [
+              "api",
+              "clickup",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "YOUR_CLICKUP_TOKEN"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "91599507-179f-433f-bdff-5fe5adaefe9a",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "api.clickup.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "113",
+              "system": true
+            }
+          ],
+          "method": "PUT",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n  \"name\": \"Updated Course Task 1782785967107\",\r\n  \"description\": \"Task updated from Postman course project\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "83b849c1-e1b5-4fc8-9554-e73d58dc70db",
+          "status": "Unauthorized",
+          "code": 401,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "51"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Date",
+              "value": "Tue, 30 Jun 2026 02:19:25 GMT"
+            },
+            {
+              "key": "X-Xss-Protection",
+              "value": "0"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Content-Language",
+              "value": "en-US"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "frame-ancestors 'self';"
+            },
+            {
+              "key": "Expect-Ct",
+              "value": "max-age=0"
+            },
+            {
+              "key": "Expires",
+              "value": "0"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "Server",
+              "value": "nginx"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=31536000; includeSubDomains"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Datadog-Trace-Id",
+              "value": "1504458564244443133"
+            },
+            {
+              "key": "X-Dns-Prefetch-Control",
+              "value": "off"
+            },
+            {
+              "key": "X-Download-Options",
+              "value": "noopen"
+            },
+            {
+              "key": "X-Krakend",
+              "value": "Version undefined"
+            },
+            {
+              "key": "X-Krakend-Completed",
+              "value": "false"
+            },
+            {
+              "key": "X-Permitted-Cross-Domain-Policies",
+              "value": "none"
+            },
+            {
+              "key": "X-Cache",
+              "value": "Error from cloudfront"
+            },
+            {
+              "key": "Via",
+              "value": "1.1 0417fc4cd131525d7bfe1f1d34277a38.cloudfront.net (CloudFront)"
+            },
+            {
+              "key": "X-Amz-Cf-Pop",
+              "value": "WAW51-P6"
+            },
+            {
+              "key": "Alt-Svc",
+              "value": "h3=\":443\"; ma=86400"
+            },
+            {
+              "key": "X-Amz-Cf-Id",
+              "value": "8A5bcUmdQAcDt0VOGJ6cvanGAERuOkF5lmWa0BuajUH4DQkjAwCg1w=="
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              101,
+              114,
+              114,
+              34,
+              58,
+              34,
+              79,
+              97,
+              117,
+              116,
+              104,
+              32,
+              116,
+              111,
+              107,
+              101,
+              110,
+              32,
+              110,
+              111,
+              116,
+              32,
+              102,
+              111,
+              117,
+              110,
+              100,
+              34,
+              44,
+              34,
+              69,
+              67,
+              79,
+              68,
+              69,
+              34,
+              58,
+              34,
+              79,
+              65,
+              85,
+              84,
+              72,
+              95,
+              48,
+              49,
+              57,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 67,
+          "responseSize": 51
+        },
+        "id": "1534dc49-495b-4dde-943b-c10906b7515f",
+        "assertions": [
+          {
+            "assertion": "Status code is 200",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 0,
+              "test": "Status code is 200",
+              "message": "expected response to have status code 200 but got 401",
+              "stack": "AssertionError: expected response to have status code 200 but got 401\n   at Object.eval sandbox-script.js:1:3)"
+            }
+          },
+          {
+            "assertion": "Task was updated",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 1,
+              "test": "Task was updated",
+              "message": "expected undefined to deeply equal null",
+              "stack": "AssertionError: expected undefined to deeply equal null\n   at Object.eval sandbox-script.js:2:3)"
+            }
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "456cae3c-8c57-45fa-bc1b-0cec9ceef5de",
+          "length": 5,
+          "cycles": 1,
+          "position": 3,
+          "iteration": 0,
+          "httpRequestId": "85ac2ffa-9821-4678-9b19-bd6f37cddcfb"
+        },
+        "item": {
+          "id": "5f47ee0b-f494-4589-a05a-84ad9c74597f",
+          "name": "Delete Task",
+          "request": {
+            "url": {
+              "path": [
+                "task",
+                "{{task_id}}"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "54da7f80-8a9e-41d9-9640-2913fe105517",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 204 or 200\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "03efb96b-5a12-4a97-8303-902d8d6fe502"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "api",
+              "v2",
+              "task",
+              "null"
+            ],
+            "host": [
+              "api",
+              "clickup",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "YOUR_CLICKUP_TOKEN"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "f75009f9-c25a-4100-8b75-a7db0fde1c3c",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "api.clickup.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "DELETE"
+        },
+        "response": {
+          "id": "73fd45a9-64bf-432b-a436-94d85b361a28",
+          "status": "Unauthorized",
+          "code": 401,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "51"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Date",
+              "value": "Tue, 30 Jun 2026 02:19:25 GMT"
+            },
+            {
+              "key": "X-Xss-Protection",
+              "value": "0"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Content-Language",
+              "value": "en-US"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "frame-ancestors 'self';"
+            },
+            {
+              "key": "Expect-Ct",
+              "value": "max-age=0"
+            },
+            {
+              "key": "Expires",
+              "value": "0"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "Server",
+              "value": "nginx"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=31536000; includeSubDomains"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Datadog-Trace-Id",
+              "value": "3190358642916399477"
+            },
+            {
+              "key": "X-Dns-Prefetch-Control",
+              "value": "off"
+            },
+            {
+              "key": "X-Download-Options",
+              "value": "noopen"
+            },
+            {
+              "key": "X-Krakend",
+              "value": "Version undefined"
+            },
+            {
+              "key": "X-Krakend-Completed",
+              "value": "false"
+            },
+            {
+              "key": "X-Permitted-Cross-Domain-Policies",
+              "value": "none"
+            },
+            {
+              "key": "X-Cache",
+              "value": "Error from cloudfront"
+            },
+            {
+              "key": "Via",
+              "value": "1.1 0417fc4cd131525d7bfe1f1d34277a38.cloudfront.net (CloudFront)"
+            },
+            {
+              "key": "X-Amz-Cf-Pop",
+              "value": "WAW51-P6"
+            },
+            {
+              "key": "Alt-Svc",
+              "value": "h3=\":443\"; ma=86400"
+            },
+            {
+              "key": "X-Amz-Cf-Id",
+              "value": "lDg_FN4VWlMKZr8vBFgHooJPN0U6sjWtcxwkWE04j9w4tvigD7rnzQ=="
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              101,
+              114,
+              114,
+              34,
+              58,
+              34,
+              79,
+              97,
+              117,
+              116,
+              104,
+              32,
+              116,
+              111,
+              107,
+              101,
+              110,
+              32,
+              110,
+              111,
+              116,
+              32,
+              102,
+              111,
+              117,
+              110,
+              100,
+              34,
+              44,
+              34,
+              69,
+              67,
+              79,
+              68,
+              69,
+              34,
+              58,
+              34,
+              79,
+              65,
+              85,
+              84,
+              72,
+              95,
+              48,
+              49,
+              57,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 70,
+          "responseSize": 51
+        },
+        "id": "5f47ee0b-f494-4589-a05a-84ad9c74597f",
+        "assertions": [
+          {
+            "assertion": "Status code is 204 or 200",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 0,
+              "test": "Status code is 204 or 200",
+              "message": "expected 401 to be one of [ 200, 204 ]",
+              "stack": "AssertionError: expected 401 to be one of [ 200, 204 ]\n   at Object.eval sandbox-script.js:1:4)"
+            }
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "6a8e7904-8679-457b-a5b2-5c07b5a51094",
+          "length": 5,
+          "cycles": 1,
+          "position": 4,
+          "iteration": 0,
+          "httpRequestId": "b4497767-0bb1-48bc-bf3d-5cf78817c1e2"
+        },
+        "item": {
+          "id": "0d92bca1-c304-43c1-b967-e75f921045ab",
+          "name": "Get Task with invalid ID",
+          "request": {
+            "url": {
+              "path": [
+                "task",
+                "{{invalid_task_id}}"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "311da77b-ef75-4e20-9547-33c525c7548e",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {\r",
+                  "    pm.response.to.have.status(401);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "4dc38a74-60d7-4666-8baf-4caf6f810baf"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "api",
+              "v2",
+              "task",
+              "invalid_task_id_12345"
+            ],
+            "host": [
+              "api",
+              "clickup",
+              "com"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "YOUR_CLICKUP_TOKEN"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "9ba6fa04-2bbd-43d6-9167-9e35581e9f60",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "api.clickup.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "dc54c90e-e732-4f45-bd0b-b17404e25a28",
+          "status": "Unauthorized",
+          "code": 401,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "Content-Length",
+              "value": "51"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Date",
+              "value": "Tue, 30 Jun 2026 02:19:25 GMT"
+            },
+            {
+              "key": "X-Xss-Protection",
+              "value": "0"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "key": "Content-Language",
+              "value": "en-US"
+            },
+            {
+              "key": "Content-Security-Policy",
+              "value": "frame-ancestors 'self';"
+            },
+            {
+              "key": "Expect-Ct",
+              "value": "max-age=0"
+            },
+            {
+              "key": "Expires",
+              "value": "0"
+            },
+            {
+              "key": "Pragma",
+              "value": "no-cache"
+            },
+            {
+              "key": "Server",
+              "value": "nginx"
+            },
+            {
+              "key": "Strict-Transport-Security",
+              "value": "max-age=31536000; includeSubDomains"
+            },
+            {
+              "key": "Vary",
+              "value": "Origin"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Datadog-Trace-Id",
+              "value": "4580026270821214474"
+            },
+            {
+              "key": "X-Dns-Prefetch-Control",
+              "value": "off"
+            },
+            {
+              "key": "X-Download-Options",
+              "value": "noopen"
+            },
+            {
+              "key": "X-Krakend",
+              "value": "Version undefined"
+            },
+            {
+              "key": "X-Krakend-Completed",
+              "value": "false"
+            },
+            {
+              "key": "X-Permitted-Cross-Domain-Policies",
+              "value": "none"
+            },
+            {
+              "key": "X-Cache",
+              "value": "Error from cloudfront"
+            },
+            {
+              "key": "Via",
+              "value": "1.1 0417fc4cd131525d7bfe1f1d34277a38.cloudfront.net (CloudFront)"
+            },
+            {
+              "key": "X-Amz-Cf-Pop",
+              "value": "WAW51-P6"
+            },
+            {
+              "key": "Alt-Svc",
+              "value": "h3=\":443\"; ma=86400"
+            },
+            {
+              "key": "X-Amz-Cf-Id",
+              "value": "9yCrFxCurE6UgYrHVwPxh4qB42cMDYNs5WW2-Pon9cW0hlU_i0gffA=="
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              101,
+              114,
+              114,
+              34,
+              58,
+              34,
+              79,
+              97,
+              117,
+              116,
+              104,
+              32,
+              116,
+              111,
+              107,
+              101,
+              110,
+              32,
+              110,
+              111,
+              116,
+              32,
+              102,
+              111,
+              117,
+              110,
+              100,
+              34,
+              44,
+              34,
+              69,
+              67,
+              79,
+              68,
+              69,
+              34,
+              58,
+              34,
+              79,
+              65,
+              85,
+              84,
+              72,
+              95,
+              48,
+              49,
+              57,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 62,
+          "responseSize": 51
+        },
+        "id": "0d92bca1-c304-43c1-b967-e75f921045ab",
+        "assertions": [
+          {
+            "assertion": "Status code is 401",
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "transfers": {
+      "responseTotal": 255
+    },
+    "failures": [
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 0,
+          "test": "Status code is 200",
+          "message": "expected response to have status code 200 but got 401",
+          "stack": "AssertionError: expected response to have status code 200 but got 401\n   at Object.eval sandbox-script.js:1:1)",
+          "checksum": "aec6d86e6d56e4e94182d9be957597aa",
+          "id": "7012ba25-3fc4-4944-a43d-01b71c223438",
+          "timestamp": 1782785966848,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 1,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 1,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:0 in test-script",
+        "source": {
+          "id": "c23ae552-b5d8-4df7-b838-69d2bd45407d",
+          "name": "Create Task",
+          "request": {
+            "url": {
+              "path": [
+                "list",
+                "{{list_id}}",
+                "task"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"{{task_name}}\",\r\n  \"description\": \"Task created from Postman course project\",\r\n  \"status\": \"to do\",\r\n  \"priority\": 3\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "295ab6e1-b2ff-4a53-91b7-43d4926e70e6",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "let taskName = \"Course Task \" + Date.now();\r",
+                  "\r",
+                  "pm.environment.set(\"task_name\", taskName);"
+                ],
+                "_lastExecutionId": "93113e45-26ce-4c7d-9ff1-deb20d23e450"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "e66746f6-8c2b-4835-9eef-421042c6c569",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});\r",
+                  "\r",
+                  "let response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Task was created\", function () {\r",
+                  "    pm.expect(response.id).to.exist;\r",
+                  "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Task has required fields\", function () {\r",
+                  "    pm.expect(response).to.have.property(\"id\");\r",
+                  "    pm.expect(response).to.have.property(\"name\");\r",
+                  "    pm.expect(response).to.have.property(\"status\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.environment.set(\"task_id\", response.id);"
+                ],
+                "_lastExecutionId": "651d01dc-e9b4-44e1-a151-eeb31497aa75"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "id": "72206841-45fb-4a44-b524-07d9f48a2383",
+          "name": "Positive Scenarios",
+          "item": [
+            {
+              "id": "c23ae552-b5d8-4df7-b838-69d2bd45407d",
+              "name": "Create Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "list",
+                    "{{list_id}}",
+                    "task"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"{{task_name}}\",\r\n  \"description\": \"Task created from Postman course project\",\r\n  \"status\": \"to do\",\r\n  \"priority\": 3\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "295ab6e1-b2ff-4a53-91b7-43d4926e70e6",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "let taskName = \"Course Task \" + Date.now();\r",
+                      "\r",
+                      "pm.environment.set(\"task_name\", taskName);"
+                    ],
+                    "_lastExecutionId": "93113e45-26ce-4c7d-9ff1-deb20d23e450"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "e66746f6-8c2b-4835-9eef-421042c6c569",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                      "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                      "});\r",
+                      "\r",
+                      "let response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Task was created\", function () {\r",
+                      "    pm.expect(response.id).to.exist;\r",
+                      "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Task has required fields\", function () {\r",
+                      "    pm.expect(response).to.have.property(\"id\");\r",
+                      "    pm.expect(response).to.have.property(\"name\");\r",
+                      "    pm.expect(response).to.have.property(\"status\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.environment.set(\"task_id\", response.id);"
+                    ],
+                    "_lastExecutionId": "651d01dc-e9b4-44e1-a151-eeb31497aa75"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "36261d69-9752-47fe-8165-67c5722e523d",
+              "name": "Get Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "task",
+                    "{{task_id}}"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "8f27770c-cf96-4197-a541-041d3e83583c",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                      "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                      "});\r",
+                      "\r",
+                      "let response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Correct task returned\", function () {\r",
+                      "    pm.expect(response.id).to.eql(pm.environment.get(\"task_id\"));\r",
+                      "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Task has required fields\", function () {\r",
+                      "    pm.expect(response).to.have.property(\"id\");\r",
+                      "    pm.expect(response).to.have.property(\"name\");\r",
+                      "    pm.expect(response).to.have.property(\"status\");\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "07268cc7-3a9e-4c26-aba8-80a7593db597"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "1534dc49-495b-4dde-943b-c10906b7515f",
+              "name": "Update Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "task",
+                    "{{task_id}}"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"{{updated_task_name}}\",\r\n  \"description\": \"Task updated from Postman course project\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "c80e5cdd-e837-4b79-937d-c77255e4b2f5",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "let updatedName = \"Updated Course Task \" + Date.now();\r",
+                      "\r",
+                      "pm.environment.set(\"updated_task_name\", updatedName);"
+                    ],
+                    "_lastExecutionId": "de157499-4655-42f0-9f42-6f4b231a49d8"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "86052a6f-f354-4608-a835-64238c420620",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "let response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Task was updated\", function () {\r",
+                      "    pm.expect(response.id).to.eql(pm.environment.get(\"task_id\"));\r",
+                      "    pm.expect(response.name).to.eql(pm.environment.get(\"updated_task_name\"));\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "ff1dacd7-008e-4dcb-b6db-7eaa1431c97b"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "5f47ee0b-f494-4589-a05a-84ad9c74597f",
+              "name": "Delete Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "task",
+                    "{{task_id}}"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "54da7f80-8a9e-41d9-9640-2913fe105517",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 204 or 200\", function () {\r",
+                      "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "03efb96b-5a12-4a97-8303-902d8d6fe502"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": []
+        },
+        "cursor": {
+          "position": 0,
+          "iteration": 0,
+          "length": 5,
+          "cycles": 1,
+          "empty": false,
+          "eof": false,
+          "bof": true,
+          "cr": false,
+          "ref": "134928a1-9e43-4bca-a647-cf47cf340fe5",
+          "httpRequestId": "00e0e48b-0620-4c7f-98e5-6c71557fd7de",
+          "scriptId": "e66746f6-8c2b-4835-9eef-421042c6c569",
+          "execution": "651d01dc-e9b4-44e1-a151-eeb31497aa75"
+        }
+      },
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 2,
+          "test": "Task was created",
+          "message": "expected undefined to exist",
+          "stack": "AssertionError: expected undefined to exist\n   at Object.eval sandbox-script.js:3:1)",
+          "checksum": "721a103f2d0fb2a17eb52e1b0922a533",
+          "id": "b980d90a-48a4-410e-accc-1997708f1331",
+          "timestamp": 1782785966852,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 3,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 1,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:2 in test-script",
+        "source": {
+          "id": "c23ae552-b5d8-4df7-b838-69d2bd45407d",
+          "name": "Create Task",
+          "request": {
+            "url": {
+              "path": [
+                "list",
+                "{{list_id}}",
+                "task"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"{{task_name}}\",\r\n  \"description\": \"Task created from Postman course project\",\r\n  \"status\": \"to do\",\r\n  \"priority\": 3\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "295ab6e1-b2ff-4a53-91b7-43d4926e70e6",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "let taskName = \"Course Task \" + Date.now();\r",
+                  "\r",
+                  "pm.environment.set(\"task_name\", taskName);"
+                ],
+                "_lastExecutionId": "93113e45-26ce-4c7d-9ff1-deb20d23e450"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "e66746f6-8c2b-4835-9eef-421042c6c569",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});\r",
+                  "\r",
+                  "let response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Task was created\", function () {\r",
+                  "    pm.expect(response.id).to.exist;\r",
+                  "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Task has required fields\", function () {\r",
+                  "    pm.expect(response).to.have.property(\"id\");\r",
+                  "    pm.expect(response).to.have.property(\"name\");\r",
+                  "    pm.expect(response).to.have.property(\"status\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.environment.set(\"task_id\", response.id);"
+                ],
+                "_lastExecutionId": "651d01dc-e9b4-44e1-a151-eeb31497aa75"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "id": "72206841-45fb-4a44-b524-07d9f48a2383",
+          "name": "Positive Scenarios",
+          "item": [
+            {
+              "id": "c23ae552-b5d8-4df7-b838-69d2bd45407d",
+              "name": "Create Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "list",
+                    "{{list_id}}",
+                    "task"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"{{task_name}}\",\r\n  \"description\": \"Task created from Postman course project\",\r\n  \"status\": \"to do\",\r\n  \"priority\": 3\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "295ab6e1-b2ff-4a53-91b7-43d4926e70e6",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "let taskName = \"Course Task \" + Date.now();\r",
+                      "\r",
+                      "pm.environment.set(\"task_name\", taskName);"
+                    ],
+                    "_lastExecutionId": "93113e45-26ce-4c7d-9ff1-deb20d23e450"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "e66746f6-8c2b-4835-9eef-421042c6c569",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                      "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                      "});\r",
+                      "\r",
+                      "let response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Task was created\", function () {\r",
+                      "    pm.expect(response.id).to.exist;\r",
+                      "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Task has required fields\", function () {\r",
+                      "    pm.expect(response).to.have.property(\"id\");\r",
+                      "    pm.expect(response).to.have.property(\"name\");\r",
+                      "    pm.expect(response).to.have.property(\"status\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.environment.set(\"task_id\", response.id);"
+                    ],
+                    "_lastExecutionId": "651d01dc-e9b4-44e1-a151-eeb31497aa75"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "36261d69-9752-47fe-8165-67c5722e523d",
+              "name": "Get Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "task",
+                    "{{task_id}}"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "8f27770c-cf96-4197-a541-041d3e83583c",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                      "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                      "});\r",
+                      "\r",
+                      "let response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Correct task returned\", function () {\r",
+                      "    pm.expect(response.id).to.eql(pm.environment.get(\"task_id\"));\r",
+                      "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Task has required fields\", function () {\r",
+                      "    pm.expect(response).to.have.property(\"id\");\r",
+                      "    pm.expect(response).to.have.property(\"name\");\r",
+                      "    pm.expect(response).to.have.property(\"status\");\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "07268cc7-3a9e-4c26-aba8-80a7593db597"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "1534dc49-495b-4dde-943b-c10906b7515f",
+              "name": "Update Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "task",
+                    "{{task_id}}"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"{{updated_task_name}}\",\r\n  \"description\": \"Task updated from Postman course project\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "c80e5cdd-e837-4b79-937d-c77255e4b2f5",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "let updatedName = \"Updated Course Task \" + Date.now();\r",
+                      "\r",
+                      "pm.environment.set(\"updated_task_name\", updatedName);"
+                    ],
+                    "_lastExecutionId": "de157499-4655-42f0-9f42-6f4b231a49d8"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "86052a6f-f354-4608-a835-64238c420620",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "let response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Task was updated\", function () {\r",
+                      "    pm.expect(response.id).to.eql(pm.environment.get(\"task_id\"));\r",
+                      "    pm.expect(response.name).to.eql(pm.environment.get(\"updated_task_name\"));\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "ff1dacd7-008e-4dcb-b6db-7eaa1431c97b"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "5f47ee0b-f494-4589-a05a-84ad9c74597f",
+              "name": "Delete Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "task",
+                    "{{task_id}}"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "54da7f80-8a9e-41d9-9640-2913fe105517",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 204 or 200\", function () {\r",
+                      "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "03efb96b-5a12-4a97-8303-902d8d6fe502"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": []
+        },
+        "cursor": {
+          "position": 0,
+          "iteration": 0,
+          "length": 5,
+          "cycles": 1,
+          "empty": false,
+          "eof": false,
+          "bof": true,
+          "cr": false,
+          "ref": "134928a1-9e43-4bca-a647-cf47cf340fe5",
+          "httpRequestId": "00e0e48b-0620-4c7f-98e5-6c71557fd7de",
+          "scriptId": "e66746f6-8c2b-4835-9eef-421042c6c569",
+          "execution": "651d01dc-e9b4-44e1-a151-eeb31497aa75"
+        }
+      },
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 3,
+          "test": "Task has required fields",
+          "message": "expected { err: 'Oauth token not found', …(1) } to have property 'id'",
+          "stack": "AssertionError: expected { err: 'Oauth token not found', …(1) } to have property 'id'\n   at Object.eval sandbox-script.js:4:1)",
+          "checksum": "ad7414955e9b5fbfca009c4f1978f246",
+          "id": "659a0982-5b19-4777-aeb4-186f6ea91bcb",
+          "timestamp": 1782785966855,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 4,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 1,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:3 in test-script",
+        "source": {
+          "id": "c23ae552-b5d8-4df7-b838-69d2bd45407d",
+          "name": "Create Task",
+          "request": {
+            "url": {
+              "path": [
+                "list",
+                "{{list_id}}",
+                "task"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"{{task_name}}\",\r\n  \"description\": \"Task created from Postman course project\",\r\n  \"status\": \"to do\",\r\n  \"priority\": 3\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "295ab6e1-b2ff-4a53-91b7-43d4926e70e6",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "let taskName = \"Course Task \" + Date.now();\r",
+                  "\r",
+                  "pm.environment.set(\"task_name\", taskName);"
+                ],
+                "_lastExecutionId": "93113e45-26ce-4c7d-9ff1-deb20d23e450"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "e66746f6-8c2b-4835-9eef-421042c6c569",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});\r",
+                  "\r",
+                  "let response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Task was created\", function () {\r",
+                  "    pm.expect(response.id).to.exist;\r",
+                  "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Task has required fields\", function () {\r",
+                  "    pm.expect(response).to.have.property(\"id\");\r",
+                  "    pm.expect(response).to.have.property(\"name\");\r",
+                  "    pm.expect(response).to.have.property(\"status\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.environment.set(\"task_id\", response.id);"
+                ],
+                "_lastExecutionId": "651d01dc-e9b4-44e1-a151-eeb31497aa75"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "id": "72206841-45fb-4a44-b524-07d9f48a2383",
+          "name": "Positive Scenarios",
+          "item": [
+            {
+              "id": "c23ae552-b5d8-4df7-b838-69d2bd45407d",
+              "name": "Create Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "list",
+                    "{{list_id}}",
+                    "task"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"{{task_name}}\",\r\n  \"description\": \"Task created from Postman course project\",\r\n  \"status\": \"to do\",\r\n  \"priority\": 3\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "295ab6e1-b2ff-4a53-91b7-43d4926e70e6",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "let taskName = \"Course Task \" + Date.now();\r",
+                      "\r",
+                      "pm.environment.set(\"task_name\", taskName);"
+                    ],
+                    "_lastExecutionId": "93113e45-26ce-4c7d-9ff1-deb20d23e450"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "e66746f6-8c2b-4835-9eef-421042c6c569",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                      "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                      "});\r",
+                      "\r",
+                      "let response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Task was created\", function () {\r",
+                      "    pm.expect(response.id).to.exist;\r",
+                      "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Task has required fields\", function () {\r",
+                      "    pm.expect(response).to.have.property(\"id\");\r",
+                      "    pm.expect(response).to.have.property(\"name\");\r",
+                      "    pm.expect(response).to.have.property(\"status\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.environment.set(\"task_id\", response.id);"
+                    ],
+                    "_lastExecutionId": "651d01dc-e9b4-44e1-a151-eeb31497aa75"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "36261d69-9752-47fe-8165-67c5722e523d",
+              "name": "Get Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "task",
+                    "{{task_id}}"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "8f27770c-cf96-4197-a541-041d3e83583c",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                      "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                      "});\r",
+                      "\r",
+                      "let response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Correct task returned\", function () {\r",
+                      "    pm.expect(response.id).to.eql(pm.environment.get(\"task_id\"));\r",
+                      "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Task has required fields\", function () {\r",
+                      "    pm.expect(response).to.have.property(\"id\");\r",
+                      "    pm.expect(response).to.have.property(\"name\");\r",
+                      "    pm.expect(response).to.have.property(\"status\");\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "07268cc7-3a9e-4c26-aba8-80a7593db597"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "1534dc49-495b-4dde-943b-c10906b7515f",
+              "name": "Update Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "task",
+                    "{{task_id}}"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"{{updated_task_name}}\",\r\n  \"description\": \"Task updated from Postman course project\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "c80e5cdd-e837-4b79-937d-c77255e4b2f5",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "let updatedName = \"Updated Course Task \" + Date.now();\r",
+                      "\r",
+                      "pm.environment.set(\"updated_task_name\", updatedName);"
+                    ],
+                    "_lastExecutionId": "de157499-4655-42f0-9f42-6f4b231a49d8"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "86052a6f-f354-4608-a835-64238c420620",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "let response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Task was updated\", function () {\r",
+                      "    pm.expect(response.id).to.eql(pm.environment.get(\"task_id\"));\r",
+                      "    pm.expect(response.name).to.eql(pm.environment.get(\"updated_task_name\"));\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "ff1dacd7-008e-4dcb-b6db-7eaa1431c97b"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "5f47ee0b-f494-4589-a05a-84ad9c74597f",
+              "name": "Delete Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "task",
+                    "{{task_id}}"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "54da7f80-8a9e-41d9-9640-2913fe105517",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 204 or 200\", function () {\r",
+                      "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "03efb96b-5a12-4a97-8303-902d8d6fe502"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": []
+        },
+        "cursor": {
+          "position": 0,
+          "iteration": 0,
+          "length": 5,
+          "cycles": 1,
+          "empty": false,
+          "eof": false,
+          "bof": true,
+          "cr": false,
+          "ref": "134928a1-9e43-4bca-a647-cf47cf340fe5",
+          "httpRequestId": "00e0e48b-0620-4c7f-98e5-6c71557fd7de",
+          "scriptId": "e66746f6-8c2b-4835-9eef-421042c6c569",
+          "execution": "651d01dc-e9b4-44e1-a151-eeb31497aa75"
+        }
+      },
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 0,
+          "test": "Status code is 200",
+          "message": "expected response to have status code 200 but got 401",
+          "stack": "AssertionError: expected response to have status code 200 but got 401\n   at Object.eval sandbox-script.js:1:2)",
+          "checksum": "4cbbfd50d1523026b7122af68edf6046",
+          "id": "e9f21627-0436-4119-b597-3ede34d9e7b8",
+          "timestamp": 1782785967049,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 1,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 2,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:0 in test-script",
+        "source": {
+          "id": "36261d69-9752-47fe-8165-67c5722e523d",
+          "name": "Get Task",
+          "request": {
+            "url": {
+              "path": [
+                "task",
+                "{{task_id}}"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "8f27770c-cf96-4197-a541-041d3e83583c",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});\r",
+                  "\r",
+                  "let response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Correct task returned\", function () {\r",
+                  "    pm.expect(response.id).to.eql(pm.environment.get(\"task_id\"));\r",
+                  "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Task has required fields\", function () {\r",
+                  "    pm.expect(response).to.have.property(\"id\");\r",
+                  "    pm.expect(response).to.have.property(\"name\");\r",
+                  "    pm.expect(response).to.have.property(\"status\");\r",
+                  "});"
+                ],
+                "_lastExecutionId": "07268cc7-3a9e-4c26-aba8-80a7593db597"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "id": "72206841-45fb-4a44-b524-07d9f48a2383",
+          "name": "Positive Scenarios",
+          "item": [
+            {
+              "id": "c23ae552-b5d8-4df7-b838-69d2bd45407d",
+              "name": "Create Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "list",
+                    "{{list_id}}",
+                    "task"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"{{task_name}}\",\r\n  \"description\": \"Task created from Postman course project\",\r\n  \"status\": \"to do\",\r\n  \"priority\": 3\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "295ab6e1-b2ff-4a53-91b7-43d4926e70e6",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "let taskName = \"Course Task \" + Date.now();\r",
+                      "\r",
+                      "pm.environment.set(\"task_name\", taskName);"
+                    ],
+                    "_lastExecutionId": "93113e45-26ce-4c7d-9ff1-deb20d23e450"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "e66746f6-8c2b-4835-9eef-421042c6c569",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                      "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                      "});\r",
+                      "\r",
+                      "let response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Task was created\", function () {\r",
+                      "    pm.expect(response.id).to.exist;\r",
+                      "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Task has required fields\", function () {\r",
+                      "    pm.expect(response).to.have.property(\"id\");\r",
+                      "    pm.expect(response).to.have.property(\"name\");\r",
+                      "    pm.expect(response).to.have.property(\"status\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.environment.set(\"task_id\", response.id);"
+                    ],
+                    "_lastExecutionId": "651d01dc-e9b4-44e1-a151-eeb31497aa75"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "36261d69-9752-47fe-8165-67c5722e523d",
+              "name": "Get Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "task",
+                    "{{task_id}}"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "8f27770c-cf96-4197-a541-041d3e83583c",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                      "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                      "});\r",
+                      "\r",
+                      "let response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Correct task returned\", function () {\r",
+                      "    pm.expect(response.id).to.eql(pm.environment.get(\"task_id\"));\r",
+                      "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Task has required fields\", function () {\r",
+                      "    pm.expect(response).to.have.property(\"id\");\r",
+                      "    pm.expect(response).to.have.property(\"name\");\r",
+                      "    pm.expect(response).to.have.property(\"status\");\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "07268cc7-3a9e-4c26-aba8-80a7593db597"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "1534dc49-495b-4dde-943b-c10906b7515f",
+              "name": "Update Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "task",
+                    "{{task_id}}"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"{{updated_task_name}}\",\r\n  \"description\": \"Task updated from Postman course project\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "c80e5cdd-e837-4b79-937d-c77255e4b2f5",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "let updatedName = \"Updated Course Task \" + Date.now();\r",
+                      "\r",
+                      "pm.environment.set(\"updated_task_name\", updatedName);"
+                    ],
+                    "_lastExecutionId": "de157499-4655-42f0-9f42-6f4b231a49d8"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "86052a6f-f354-4608-a835-64238c420620",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "let response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Task was updated\", function () {\r",
+                      "    pm.expect(response.id).to.eql(pm.environment.get(\"task_id\"));\r",
+                      "    pm.expect(response.name).to.eql(pm.environment.get(\"updated_task_name\"));\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "ff1dacd7-008e-4dcb-b6db-7eaa1431c97b"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "5f47ee0b-f494-4589-a05a-84ad9c74597f",
+              "name": "Delete Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "task",
+                    "{{task_id}}"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "54da7f80-8a9e-41d9-9640-2913fe105517",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 204 or 200\", function () {\r",
+                      "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "03efb96b-5a12-4a97-8303-902d8d6fe502"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": []
+        },
+        "cursor": {
+          "ref": "c832f151-7d07-44fd-be96-b2f5312a34a8",
+          "length": 5,
+          "cycles": 1,
+          "position": 1,
+          "iteration": 0,
+          "httpRequestId": "eea08d25-6b42-47b5-88b3-bb7641267c0b",
+          "scriptId": "8f27770c-cf96-4197-a541-041d3e83583c",
+          "execution": "07268cc7-3a9e-4c26-aba8-80a7593db597"
+        }
+      },
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 2,
+          "test": "Correct task returned",
+          "message": "expected undefined to deeply equal null",
+          "stack": "AssertionError: expected undefined to deeply equal null\n   at Object.eval sandbox-script.js:3:2)",
+          "checksum": "cd8b4244a33646f0e0bfdcae773b7def",
+          "id": "73d14275-d068-48a3-ad9d-6335e4d66d7b",
+          "timestamp": 1782785967053,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 3,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 2,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:2 in test-script",
+        "source": {
+          "id": "36261d69-9752-47fe-8165-67c5722e523d",
+          "name": "Get Task",
+          "request": {
+            "url": {
+              "path": [
+                "task",
+                "{{task_id}}"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "8f27770c-cf96-4197-a541-041d3e83583c",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});\r",
+                  "\r",
+                  "let response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Correct task returned\", function () {\r",
+                  "    pm.expect(response.id).to.eql(pm.environment.get(\"task_id\"));\r",
+                  "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Task has required fields\", function () {\r",
+                  "    pm.expect(response).to.have.property(\"id\");\r",
+                  "    pm.expect(response).to.have.property(\"name\");\r",
+                  "    pm.expect(response).to.have.property(\"status\");\r",
+                  "});"
+                ],
+                "_lastExecutionId": "07268cc7-3a9e-4c26-aba8-80a7593db597"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "id": "72206841-45fb-4a44-b524-07d9f48a2383",
+          "name": "Positive Scenarios",
+          "item": [
+            {
+              "id": "c23ae552-b5d8-4df7-b838-69d2bd45407d",
+              "name": "Create Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "list",
+                    "{{list_id}}",
+                    "task"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"{{task_name}}\",\r\n  \"description\": \"Task created from Postman course project\",\r\n  \"status\": \"to do\",\r\n  \"priority\": 3\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "295ab6e1-b2ff-4a53-91b7-43d4926e70e6",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "let taskName = \"Course Task \" + Date.now();\r",
+                      "\r",
+                      "pm.environment.set(\"task_name\", taskName);"
+                    ],
+                    "_lastExecutionId": "93113e45-26ce-4c7d-9ff1-deb20d23e450"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "e66746f6-8c2b-4835-9eef-421042c6c569",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                      "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                      "});\r",
+                      "\r",
+                      "let response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Task was created\", function () {\r",
+                      "    pm.expect(response.id).to.exist;\r",
+                      "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Task has required fields\", function () {\r",
+                      "    pm.expect(response).to.have.property(\"id\");\r",
+                      "    pm.expect(response).to.have.property(\"name\");\r",
+                      "    pm.expect(response).to.have.property(\"status\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.environment.set(\"task_id\", response.id);"
+                    ],
+                    "_lastExecutionId": "651d01dc-e9b4-44e1-a151-eeb31497aa75"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "36261d69-9752-47fe-8165-67c5722e523d",
+              "name": "Get Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "task",
+                    "{{task_id}}"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "8f27770c-cf96-4197-a541-041d3e83583c",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                      "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                      "});\r",
+                      "\r",
+                      "let response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Correct task returned\", function () {\r",
+                      "    pm.expect(response.id).to.eql(pm.environment.get(\"task_id\"));\r",
+                      "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Task has required fields\", function () {\r",
+                      "    pm.expect(response).to.have.property(\"id\");\r",
+                      "    pm.expect(response).to.have.property(\"name\");\r",
+                      "    pm.expect(response).to.have.property(\"status\");\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "07268cc7-3a9e-4c26-aba8-80a7593db597"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "1534dc49-495b-4dde-943b-c10906b7515f",
+              "name": "Update Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "task",
+                    "{{task_id}}"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"{{updated_task_name}}\",\r\n  \"description\": \"Task updated from Postman course project\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "c80e5cdd-e837-4b79-937d-c77255e4b2f5",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "let updatedName = \"Updated Course Task \" + Date.now();\r",
+                      "\r",
+                      "pm.environment.set(\"updated_task_name\", updatedName);"
+                    ],
+                    "_lastExecutionId": "de157499-4655-42f0-9f42-6f4b231a49d8"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "86052a6f-f354-4608-a835-64238c420620",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "let response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Task was updated\", function () {\r",
+                      "    pm.expect(response.id).to.eql(pm.environment.get(\"task_id\"));\r",
+                      "    pm.expect(response.name).to.eql(pm.environment.get(\"updated_task_name\"));\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "ff1dacd7-008e-4dcb-b6db-7eaa1431c97b"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "5f47ee0b-f494-4589-a05a-84ad9c74597f",
+              "name": "Delete Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "task",
+                    "{{task_id}}"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "54da7f80-8a9e-41d9-9640-2913fe105517",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 204 or 200\", function () {\r",
+                      "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "03efb96b-5a12-4a97-8303-902d8d6fe502"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": []
+        },
+        "cursor": {
+          "ref": "c832f151-7d07-44fd-be96-b2f5312a34a8",
+          "length": 5,
+          "cycles": 1,
+          "position": 1,
+          "iteration": 0,
+          "httpRequestId": "eea08d25-6b42-47b5-88b3-bb7641267c0b",
+          "scriptId": "8f27770c-cf96-4197-a541-041d3e83583c",
+          "execution": "07268cc7-3a9e-4c26-aba8-80a7593db597"
+        }
+      },
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 3,
+          "test": "Task has required fields",
+          "message": "expected { err: 'Oauth token not found', …(1) } to have property 'id'",
+          "stack": "AssertionError: expected { err: 'Oauth token not found', …(1) } to have property 'id'\n   at Object.eval sandbox-script.js:4:2)",
+          "checksum": "d8987ae6f3b84cd9233d7656c4f39d3b",
+          "id": "20e75d1a-2abe-49be-8624-cbed06384737",
+          "timestamp": 1782785967055,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 4,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 2,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:3 in test-script",
+        "source": {
+          "id": "36261d69-9752-47fe-8165-67c5722e523d",
+          "name": "Get Task",
+          "request": {
+            "url": {
+              "path": [
+                "task",
+                "{{task_id}}"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "8f27770c-cf96-4197-a541-041d3e83583c",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});\r",
+                  "\r",
+                  "let response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Correct task returned\", function () {\r",
+                  "    pm.expect(response.id).to.eql(pm.environment.get(\"task_id\"));\r",
+                  "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Task has required fields\", function () {\r",
+                  "    pm.expect(response).to.have.property(\"id\");\r",
+                  "    pm.expect(response).to.have.property(\"name\");\r",
+                  "    pm.expect(response).to.have.property(\"status\");\r",
+                  "});"
+                ],
+                "_lastExecutionId": "07268cc7-3a9e-4c26-aba8-80a7593db597"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "id": "72206841-45fb-4a44-b524-07d9f48a2383",
+          "name": "Positive Scenarios",
+          "item": [
+            {
+              "id": "c23ae552-b5d8-4df7-b838-69d2bd45407d",
+              "name": "Create Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "list",
+                    "{{list_id}}",
+                    "task"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"{{task_name}}\",\r\n  \"description\": \"Task created from Postman course project\",\r\n  \"status\": \"to do\",\r\n  \"priority\": 3\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "295ab6e1-b2ff-4a53-91b7-43d4926e70e6",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "let taskName = \"Course Task \" + Date.now();\r",
+                      "\r",
+                      "pm.environment.set(\"task_name\", taskName);"
+                    ],
+                    "_lastExecutionId": "93113e45-26ce-4c7d-9ff1-deb20d23e450"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "e66746f6-8c2b-4835-9eef-421042c6c569",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                      "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                      "});\r",
+                      "\r",
+                      "let response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Task was created\", function () {\r",
+                      "    pm.expect(response.id).to.exist;\r",
+                      "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Task has required fields\", function () {\r",
+                      "    pm.expect(response).to.have.property(\"id\");\r",
+                      "    pm.expect(response).to.have.property(\"name\");\r",
+                      "    pm.expect(response).to.have.property(\"status\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.environment.set(\"task_id\", response.id);"
+                    ],
+                    "_lastExecutionId": "651d01dc-e9b4-44e1-a151-eeb31497aa75"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "36261d69-9752-47fe-8165-67c5722e523d",
+              "name": "Get Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "task",
+                    "{{task_id}}"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "8f27770c-cf96-4197-a541-041d3e83583c",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                      "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                      "});\r",
+                      "\r",
+                      "let response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Correct task returned\", function () {\r",
+                      "    pm.expect(response.id).to.eql(pm.environment.get(\"task_id\"));\r",
+                      "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Task has required fields\", function () {\r",
+                      "    pm.expect(response).to.have.property(\"id\");\r",
+                      "    pm.expect(response).to.have.property(\"name\");\r",
+                      "    pm.expect(response).to.have.property(\"status\");\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "07268cc7-3a9e-4c26-aba8-80a7593db597"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "1534dc49-495b-4dde-943b-c10906b7515f",
+              "name": "Update Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "task",
+                    "{{task_id}}"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"{{updated_task_name}}\",\r\n  \"description\": \"Task updated from Postman course project\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "c80e5cdd-e837-4b79-937d-c77255e4b2f5",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "let updatedName = \"Updated Course Task \" + Date.now();\r",
+                      "\r",
+                      "pm.environment.set(\"updated_task_name\", updatedName);"
+                    ],
+                    "_lastExecutionId": "de157499-4655-42f0-9f42-6f4b231a49d8"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "86052a6f-f354-4608-a835-64238c420620",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "let response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Task was updated\", function () {\r",
+                      "    pm.expect(response.id).to.eql(pm.environment.get(\"task_id\"));\r",
+                      "    pm.expect(response.name).to.eql(pm.environment.get(\"updated_task_name\"));\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "ff1dacd7-008e-4dcb-b6db-7eaa1431c97b"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "5f47ee0b-f494-4589-a05a-84ad9c74597f",
+              "name": "Delete Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "task",
+                    "{{task_id}}"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "54da7f80-8a9e-41d9-9640-2913fe105517",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 204 or 200\", function () {\r",
+                      "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "03efb96b-5a12-4a97-8303-902d8d6fe502"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": []
+        },
+        "cursor": {
+          "ref": "c832f151-7d07-44fd-be96-b2f5312a34a8",
+          "length": 5,
+          "cycles": 1,
+          "position": 1,
+          "iteration": 0,
+          "httpRequestId": "eea08d25-6b42-47b5-88b3-bb7641267c0b",
+          "scriptId": "8f27770c-cf96-4197-a541-041d3e83583c",
+          "execution": "07268cc7-3a9e-4c26-aba8-80a7593db597"
+        }
+      },
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 0,
+          "test": "Status code is 200",
+          "message": "expected response to have status code 200 but got 401",
+          "stack": "AssertionError: expected response to have status code 200 but got 401\n   at Object.eval sandbox-script.js:1:3)",
+          "checksum": "fd055fab3277e1b6074e35d9295842ee",
+          "id": "eab50e50-362f-48da-8e2a-09b28609c6de",
+          "timestamp": 1782785967220,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 1,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 3,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:0 in test-script",
+        "source": {
+          "id": "1534dc49-495b-4dde-943b-c10906b7515f",
+          "name": "Update Task",
+          "request": {
+            "url": {
+              "path": [
+                "task",
+                "{{task_id}}"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"{{updated_task_name}}\",\r\n  \"description\": \"Task updated from Postman course project\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "c80e5cdd-e837-4b79-937d-c77255e4b2f5",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "let updatedName = \"Updated Course Task \" + Date.now();\r",
+                  "\r",
+                  "pm.environment.set(\"updated_task_name\", updatedName);"
+                ],
+                "_lastExecutionId": "de157499-4655-42f0-9f42-6f4b231a49d8"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "86052a6f-f354-4608-a835-64238c420620",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "let response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Task was updated\", function () {\r",
+                  "    pm.expect(response.id).to.eql(pm.environment.get(\"task_id\"));\r",
+                  "    pm.expect(response.name).to.eql(pm.environment.get(\"updated_task_name\"));\r",
+                  "});"
+                ],
+                "_lastExecutionId": "ff1dacd7-008e-4dcb-b6db-7eaa1431c97b"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "id": "72206841-45fb-4a44-b524-07d9f48a2383",
+          "name": "Positive Scenarios",
+          "item": [
+            {
+              "id": "c23ae552-b5d8-4df7-b838-69d2bd45407d",
+              "name": "Create Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "list",
+                    "{{list_id}}",
+                    "task"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"{{task_name}}\",\r\n  \"description\": \"Task created from Postman course project\",\r\n  \"status\": \"to do\",\r\n  \"priority\": 3\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "295ab6e1-b2ff-4a53-91b7-43d4926e70e6",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "let taskName = \"Course Task \" + Date.now();\r",
+                      "\r",
+                      "pm.environment.set(\"task_name\", taskName);"
+                    ],
+                    "_lastExecutionId": "93113e45-26ce-4c7d-9ff1-deb20d23e450"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "e66746f6-8c2b-4835-9eef-421042c6c569",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                      "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                      "});\r",
+                      "\r",
+                      "let response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Task was created\", function () {\r",
+                      "    pm.expect(response.id).to.exist;\r",
+                      "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Task has required fields\", function () {\r",
+                      "    pm.expect(response).to.have.property(\"id\");\r",
+                      "    pm.expect(response).to.have.property(\"name\");\r",
+                      "    pm.expect(response).to.have.property(\"status\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.environment.set(\"task_id\", response.id);"
+                    ],
+                    "_lastExecutionId": "651d01dc-e9b4-44e1-a151-eeb31497aa75"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "36261d69-9752-47fe-8165-67c5722e523d",
+              "name": "Get Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "task",
+                    "{{task_id}}"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "8f27770c-cf96-4197-a541-041d3e83583c",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                      "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                      "});\r",
+                      "\r",
+                      "let response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Correct task returned\", function () {\r",
+                      "    pm.expect(response.id).to.eql(pm.environment.get(\"task_id\"));\r",
+                      "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Task has required fields\", function () {\r",
+                      "    pm.expect(response).to.have.property(\"id\");\r",
+                      "    pm.expect(response).to.have.property(\"name\");\r",
+                      "    pm.expect(response).to.have.property(\"status\");\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "07268cc7-3a9e-4c26-aba8-80a7593db597"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "1534dc49-495b-4dde-943b-c10906b7515f",
+              "name": "Update Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "task",
+                    "{{task_id}}"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"{{updated_task_name}}\",\r\n  \"description\": \"Task updated from Postman course project\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "c80e5cdd-e837-4b79-937d-c77255e4b2f5",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "let updatedName = \"Updated Course Task \" + Date.now();\r",
+                      "\r",
+                      "pm.environment.set(\"updated_task_name\", updatedName);"
+                    ],
+                    "_lastExecutionId": "de157499-4655-42f0-9f42-6f4b231a49d8"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "86052a6f-f354-4608-a835-64238c420620",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "let response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Task was updated\", function () {\r",
+                      "    pm.expect(response.id).to.eql(pm.environment.get(\"task_id\"));\r",
+                      "    pm.expect(response.name).to.eql(pm.environment.get(\"updated_task_name\"));\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "ff1dacd7-008e-4dcb-b6db-7eaa1431c97b"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "5f47ee0b-f494-4589-a05a-84ad9c74597f",
+              "name": "Delete Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "task",
+                    "{{task_id}}"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "54da7f80-8a9e-41d9-9640-2913fe105517",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 204 or 200\", function () {\r",
+                      "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "03efb96b-5a12-4a97-8303-902d8d6fe502"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": []
+        },
+        "cursor": {
+          "ref": "455d2fda-5650-4326-9b4d-83a8ee5ce8c8",
+          "length": 5,
+          "cycles": 1,
+          "position": 2,
+          "iteration": 0,
+          "httpRequestId": "dc096d12-7e65-4442-907f-f243bbbc2229",
+          "scriptId": "86052a6f-f354-4608-a835-64238c420620",
+          "execution": "ff1dacd7-008e-4dcb-b6db-7eaa1431c97b"
+        }
+      },
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 1,
+          "test": "Task was updated",
+          "message": "expected undefined to deeply equal null",
+          "stack": "AssertionError: expected undefined to deeply equal null\n   at Object.eval sandbox-script.js:2:3)",
+          "checksum": "a2776305541ac2f63a98fadd2c64630f",
+          "id": "23a24d7b-7b14-4133-b094-a36682c202ff",
+          "timestamp": 1782785967222,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 2,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 3,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:1 in test-script",
+        "source": {
+          "id": "1534dc49-495b-4dde-943b-c10906b7515f",
+          "name": "Update Task",
+          "request": {
+            "url": {
+              "path": [
+                "task",
+                "{{task_id}}"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"{{updated_task_name}}\",\r\n  \"description\": \"Task updated from Postman course project\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "c80e5cdd-e837-4b79-937d-c77255e4b2f5",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "let updatedName = \"Updated Course Task \" + Date.now();\r",
+                  "\r",
+                  "pm.environment.set(\"updated_task_name\", updatedName);"
+                ],
+                "_lastExecutionId": "de157499-4655-42f0-9f42-6f4b231a49d8"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "86052a6f-f354-4608-a835-64238c420620",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "let response = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Task was updated\", function () {\r",
+                  "    pm.expect(response.id).to.eql(pm.environment.get(\"task_id\"));\r",
+                  "    pm.expect(response.name).to.eql(pm.environment.get(\"updated_task_name\"));\r",
+                  "});"
+                ],
+                "_lastExecutionId": "ff1dacd7-008e-4dcb-b6db-7eaa1431c97b"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "id": "72206841-45fb-4a44-b524-07d9f48a2383",
+          "name": "Positive Scenarios",
+          "item": [
+            {
+              "id": "c23ae552-b5d8-4df7-b838-69d2bd45407d",
+              "name": "Create Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "list",
+                    "{{list_id}}",
+                    "task"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"{{task_name}}\",\r\n  \"description\": \"Task created from Postman course project\",\r\n  \"status\": \"to do\",\r\n  \"priority\": 3\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "295ab6e1-b2ff-4a53-91b7-43d4926e70e6",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "let taskName = \"Course Task \" + Date.now();\r",
+                      "\r",
+                      "pm.environment.set(\"task_name\", taskName);"
+                    ],
+                    "_lastExecutionId": "93113e45-26ce-4c7d-9ff1-deb20d23e450"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "e66746f6-8c2b-4835-9eef-421042c6c569",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                      "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                      "});\r",
+                      "\r",
+                      "let response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Task was created\", function () {\r",
+                      "    pm.expect(response.id).to.exist;\r",
+                      "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Task has required fields\", function () {\r",
+                      "    pm.expect(response).to.have.property(\"id\");\r",
+                      "    pm.expect(response).to.have.property(\"name\");\r",
+                      "    pm.expect(response).to.have.property(\"status\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.environment.set(\"task_id\", response.id);"
+                    ],
+                    "_lastExecutionId": "651d01dc-e9b4-44e1-a151-eeb31497aa75"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "36261d69-9752-47fe-8165-67c5722e523d",
+              "name": "Get Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "task",
+                    "{{task_id}}"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "8f27770c-cf96-4197-a541-041d3e83583c",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                      "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                      "});\r",
+                      "\r",
+                      "let response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Correct task returned\", function () {\r",
+                      "    pm.expect(response.id).to.eql(pm.environment.get(\"task_id\"));\r",
+                      "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Task has required fields\", function () {\r",
+                      "    pm.expect(response).to.have.property(\"id\");\r",
+                      "    pm.expect(response).to.have.property(\"name\");\r",
+                      "    pm.expect(response).to.have.property(\"status\");\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "07268cc7-3a9e-4c26-aba8-80a7593db597"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "1534dc49-495b-4dde-943b-c10906b7515f",
+              "name": "Update Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "task",
+                    "{{task_id}}"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"{{updated_task_name}}\",\r\n  \"description\": \"Task updated from Postman course project\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "c80e5cdd-e837-4b79-937d-c77255e4b2f5",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "let updatedName = \"Updated Course Task \" + Date.now();\r",
+                      "\r",
+                      "pm.environment.set(\"updated_task_name\", updatedName);"
+                    ],
+                    "_lastExecutionId": "de157499-4655-42f0-9f42-6f4b231a49d8"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "86052a6f-f354-4608-a835-64238c420620",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "let response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Task was updated\", function () {\r",
+                      "    pm.expect(response.id).to.eql(pm.environment.get(\"task_id\"));\r",
+                      "    pm.expect(response.name).to.eql(pm.environment.get(\"updated_task_name\"));\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "ff1dacd7-008e-4dcb-b6db-7eaa1431c97b"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "5f47ee0b-f494-4589-a05a-84ad9c74597f",
+              "name": "Delete Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "task",
+                    "{{task_id}}"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "54da7f80-8a9e-41d9-9640-2913fe105517",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 204 or 200\", function () {\r",
+                      "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "03efb96b-5a12-4a97-8303-902d8d6fe502"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": []
+        },
+        "cursor": {
+          "ref": "455d2fda-5650-4326-9b4d-83a8ee5ce8c8",
+          "length": 5,
+          "cycles": 1,
+          "position": 2,
+          "iteration": 0,
+          "httpRequestId": "dc096d12-7e65-4442-907f-f243bbbc2229",
+          "scriptId": "86052a6f-f354-4608-a835-64238c420620",
+          "execution": "ff1dacd7-008e-4dcb-b6db-7eaa1431c97b"
+        }
+      },
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 0,
+          "test": "Status code is 204 or 200",
+          "message": "expected 401 to be one of [ 200, 204 ]",
+          "stack": "AssertionError: expected 401 to be one of [ 200, 204 ]\n   at Object.eval sandbox-script.js:1:4)",
+          "checksum": "ca7d577890024b919388897e4ee48057",
+          "id": "f970f260-5d8c-4d3f-80c5-1998349b6d2d",
+          "timestamp": 1782785967384,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 1,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 4,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:0 in test-script",
+        "source": {
+          "id": "5f47ee0b-f494-4589-a05a-84ad9c74597f",
+          "name": "Delete Task",
+          "request": {
+            "url": {
+              "path": [
+                "task",
+                "{{task_id}}"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "54da7f80-8a9e-41d9-9640-2913fe105517",
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [
+                  "pm.test(\"Status code is 204 or 200\", function () {\r",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);\r",
+                  "});"
+                ],
+                "_lastExecutionId": "03efb96b-5a12-4a97-8303-902d8d6fe502"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "id": "72206841-45fb-4a44-b524-07d9f48a2383",
+          "name": "Positive Scenarios",
+          "item": [
+            {
+              "id": "c23ae552-b5d8-4df7-b838-69d2bd45407d",
+              "name": "Create Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "list",
+                    "{{list_id}}",
+                    "task"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"{{task_name}}\",\r\n  \"description\": \"Task created from Postman course project\",\r\n  \"status\": \"to do\",\r\n  \"priority\": 3\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "295ab6e1-b2ff-4a53-91b7-43d4926e70e6",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "let taskName = \"Course Task \" + Date.now();\r",
+                      "\r",
+                      "pm.environment.set(\"task_name\", taskName);"
+                    ],
+                    "_lastExecutionId": "93113e45-26ce-4c7d-9ff1-deb20d23e450"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "e66746f6-8c2b-4835-9eef-421042c6c569",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                      "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                      "});\r",
+                      "\r",
+                      "let response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Task was created\", function () {\r",
+                      "    pm.expect(response.id).to.exist;\r",
+                      "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Task has required fields\", function () {\r",
+                      "    pm.expect(response).to.have.property(\"id\");\r",
+                      "    pm.expect(response).to.have.property(\"name\");\r",
+                      "    pm.expect(response).to.have.property(\"status\");\r",
+                      "});\r",
+                      "\r",
+                      "pm.environment.set(\"task_id\", response.id);"
+                    ],
+                    "_lastExecutionId": "651d01dc-e9b4-44e1-a151-eeb31497aa75"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "36261d69-9752-47fe-8165-67c5722e523d",
+              "name": "Get Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "task",
+                    "{{task_id}}"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "8f27770c-cf96-4197-a541-041d3e83583c",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                      "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                      "});\r",
+                      "\r",
+                      "let response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Correct task returned\", function () {\r",
+                      "    pm.expect(response.id).to.eql(pm.environment.get(\"task_id\"));\r",
+                      "    pm.expect(response.name).to.eql(pm.environment.get(\"task_name\"));\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"Task has required fields\", function () {\r",
+                      "    pm.expect(response).to.have.property(\"id\");\r",
+                      "    pm.expect(response).to.have.property(\"name\");\r",
+                      "    pm.expect(response).to.have.property(\"status\");\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "07268cc7-3a9e-4c26-aba8-80a7593db597"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "1534dc49-495b-4dde-943b-c10906b7515f",
+              "name": "Update Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "task",
+                    "{{task_id}}"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"{{updated_task_name}}\",\r\n  \"description\": \"Task updated from Postman course project\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "c80e5cdd-e837-4b79-937d-c77255e4b2f5",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "let updatedName = \"Updated Course Task \" + Date.now();\r",
+                      "\r",
+                      "pm.environment.set(\"updated_task_name\", updatedName);"
+                    ],
+                    "_lastExecutionId": "de157499-4655-42f0-9f42-6f4b231a49d8"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "86052a6f-f354-4608-a835-64238c420620",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "let response = pm.response.json();\r",
+                      "\r",
+                      "pm.test(\"Task was updated\", function () {\r",
+                      "    pm.expect(response.id).to.eql(pm.environment.get(\"task_id\"));\r",
+                      "    pm.expect(response.name).to.eql(pm.environment.get(\"updated_task_name\"));\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "ff1dacd7-008e-4dcb-b6db-7eaa1431c97b"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "5f47ee0b-f494-4589-a05a-84ad9c74597f",
+              "name": "Delete Task",
+              "request": {
+                "url": {
+                  "path": [
+                    "task",
+                    "{{task_id}}"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "{{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "54da7f80-8a9e-41d9-9640-2913fe105517",
+                    "type": "text/javascript",
+                    "packages": {},
+                    "exec": [
+                      "pm.test(\"Status code is 204 or 200\", function () {\r",
+                      "    pm.expect(pm.response.code).to.be.oneOf([200, 204]);\r",
+                      "});"
+                    ],
+                    "_lastExecutionId": "03efb96b-5a12-4a97-8303-902d8d6fe502"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": []
+        },
+        "cursor": {
+          "ref": "456cae3c-8c57-45fa-bc1b-0cec9ceef5de",
+          "length": 5,
+          "cycles": 1,
+          "position": 3,
+          "iteration": 0,
+          "httpRequestId": "85ac2ffa-9821-4678-9b19-bd6f37cddcfb",
+          "scriptId": "54da7f80-8a9e-41d9-9640-2913fe105517",
+          "execution": "03efb96b-5a12-4a97-8303-902d8d6fe502"
+        }
+      }
+    ],
+    "error": null
+  }
+}
