@@ -10,12 +10,13 @@ jobs:
 
       - run:
           name: Install Newman
-          command: sudo npm install -g newman
+          command: |
+            npm install newman
 
       - run:
           name: Run ClickUp Tasks API collection
           command: |
-            newman run "postman/ClickUp Tasks API Course Project.postman_collection.json" \
+            npx newman run "postman/ClickUp Tasks API Course Project.postman_collection.json" \
               -e "postman/ClickUp_Tasks_Env.postman_environment.json" \
               --env-var "base_url=https://api.clickup.com/api/v2" \
               --env-var "token=${CLICKUP_TOKEN}" \
