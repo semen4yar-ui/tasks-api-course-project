@@ -1,0 +1,21 @@
+version: 2.1
+
+jobs:
+  postman-tests:
+    docker:
+      - image: postman/newman:alpine
+
+    steps:
+      - checkout
+
+      - run:
+          name: Run ClickUp Tasks API collection
+          command: |
+            newman run "postman/ClickUp Tasks API Course Project.postman_collection.json" \
+              -e "postman/ClickUp_Tasks_Env.postman_environment.json" \
+              --env-var "token=${CLICKUP_TOKEN}"
+
+workflows:
+  test:
+    jobs:
+      - postman-tests
