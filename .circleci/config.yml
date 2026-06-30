@@ -3,10 +3,14 @@ version: 2.1
 jobs:
   postman-tests:
     docker:
-      - image: postman/newman:alpine
+      - image: cimg/node:20.11
 
     steps:
       - checkout
+
+      - run:
+          name: Install Newman
+          command: npm install -g newman
 
       - run:
           name: Run ClickUp Tasks API collection
